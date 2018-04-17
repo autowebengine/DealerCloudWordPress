@@ -1,6 +1,6 @@
 <?php
 
-function _DealerCloudImpl($atts, $content = null)
+function DealerCloudInventory($atts, $content = null)
 {
     if (isset($_REQUEST['p'])) {
         $p = InputHelper::get($_REQUEST, 'p');
@@ -139,7 +139,7 @@ function _DealerCloudImpl($atts, $content = null)
             "special"    => $vars->spec,
             "class_code" => $vars->classCode,
             "page"       => $vars->page,
-            "page_size"  => $pageSize,
+            "page_size"  => (string)$pageSize,
             "sort_by"    => $vars->sortBy,
             "sort_type"  => $vars->sortType
         ));

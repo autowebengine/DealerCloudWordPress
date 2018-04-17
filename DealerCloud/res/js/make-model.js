@@ -25,7 +25,7 @@ function loadModels(a_make) {
     request += "<request method=\"vehicle.list_models\">";
     request += "<token>" + awe_options.aweAPIKey + "</token>";
     request += "<make>" + a_make + "</make>";
-    request += "<dealer_id>" + awe_options.appName + "</dealer_id>";
+    // request += "<dealer_id>" + awe_options.appName + "</dealer_id>";
     request += "</request>";
 
     // create web client
@@ -54,7 +54,7 @@ function loadModels(a_make) {
         }
 
         // add each make to our list
-        models = "<option value=''></option>";
+        var models = "<option value=''></option>";
         for (var i = 0; i < model.length; i++) {
             models += "<option value='" + model.item(i).textContent + "'>" + model.item(i).textContent + "</option>";
         }

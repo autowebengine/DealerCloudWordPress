@@ -1,4 +1,5 @@
 <?php
+global $wpdb;
 
 $client = new Client();
 
@@ -18,6 +19,14 @@ if (isset($_POST['Delete'])) {
         }
     }
 }
+
+$baseUrl = "";
+$sql     = "SELECT * FROM " . $wpdb->prefix . "posts WHERE post_content like '%[dealercloud]%' AND post_status='publish' LIMIT 1";
+$results = $wpdb->get_results($sql);
+if (count($results) == 1) {
+    $baseUrl = get_permalink($results[0]->ID);
+}
+$baseUrl .= "?";
 
 $folder = WP_PLUGIN_URL . '/DealerCloud';
 echo '<script type="text/javascript" src="' . $folder . '/res/js/jquery-1.3.min.js"></script>';

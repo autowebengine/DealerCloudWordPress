@@ -136,7 +136,7 @@ class Client
             foreach ($this->data->vehicles[0]->vehicle as $veh) {
                 $vehicle           = array();
                 $vehicle["photos"] = array();
-                $veihcle["dealer"] = array();
+                $vehicle["dealer"] = array();
                 foreach ($veh as $key => $val) {
                     $key = (string)$key;
                     if ($key != "dealer" && $key != "photos") {
