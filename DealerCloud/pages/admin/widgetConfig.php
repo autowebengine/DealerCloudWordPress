@@ -1,107 +1,90 @@
 <?php
 
-if (isset($_POST['sideDealerCloud-Submit']) && $_POST['sideDealerCloud-Submit']) {
-    $options['title']  = htmlspecialchars($_POST['sideDealerCloud-WidgetTitle']);
-    $options['make']   = htmlspecialchars($_POST['make']);
-    $options['model']  = htmlspecialchars($_POST['model']);
-    $options['ids']    = htmlspecialchars($_POST['sideDealerCloud-VehiclesIDS']);
-    $options['random'] = isset($_POST['sideDealerCloud-random']) ? '1' : '0';
-    $options['number'] = htmlspecialchars($_POST['sideDealerCloud-VehiclesNumber']);
-    if ($options['number'] > 5) {
-        $options['number'] = 5;
+if (isset($_POST['DealerCloud-Submit']) && $_POST['DealerCloud-Submit']) {
+    $options['title']    = htmlspecialchars($_POST['title']);
+    $options['number']   = htmlspecialchars($_POST['number']);
+    $options['ids']      = htmlspecialchars($_POST['ids']);
+    $options['featured'] = isset($_POST['featured']) ? '1' : '0';
+    $options['sortby']   = htmlspecialchars($_POST['sortby']);
+    $options['sortdir']  = htmlspecialchars($_POST['sortdir']);
+    if ($options['number'] > 6) {
+        $options['number'] = 6;
     }
 
     update_option("DealerCloud_Widget", $options);
 }
 
-$client  = new Client();
-$folder  = WP_PLUGIN_URL . '/DealerCloud';
-
-$options = get_option("DealerCloud_Widget");
-$title  = isset($options['title']) ? $options['title']: '';
-$random  = isset($options['random']) ? $options['random']: '0';
-$number  = isset($options['number']) ? $options['number']: 3;
-$ids     = isset($options['ids']) ? $options['ids']: '';
-$make    = isset($options['make']) ? $options['make']: '';
-$model   = isset($options['model']) ? $options['model']: '';
+$options  = get_option("DealerCloud_Widget");
+$title    = isset($options['title']) ? $options['title'] : '';
+$number   = isset($options['number']) ? $options['number'] : '';
+$ids      = isset($options['ids']) ? $options['ids'] : '';
+$featured = isset($options['featured']) ? $options['featured'] : '0';
+$sortby   = isset($options['sortby']) ? $options['sortby'] : '';
+$sortdir  = isset($options['sortdir']) ? $options['sortdir'] : '';
 
 ?>
-    <script src="<?= $folder ?>/res/js/jquery-1.3.min.js"></script>
-    <script src="<?= $folder ?>/res/js/jquery.corner.js"></script>
-    <script src="<?= $folder ?>/res/js/awe.js"></script>
-    <script src="<?= $folder ?>/res/js/make-model.js"></script>
-    <script type="text/javascript">
-        var SITE_FOLDER = "<?=$folder?>";
-    </script>
+<p>
+    <label for="title">
+        <b>Title:</b>
+    </label><br/>
+    Title of widget showing vehicles<br/>
+    <input class="widefat" type="text" id="title" name="title" value="<?= $title ?>"/>
+    <br/><br/>
 
-    <p>
-        <label for="sideFeature-WidgetTitle">
-            <b>Title:</b>
-        </label><br/>
-        Title of widget showing vehicles<br/>
-        <input class="widefat" type="text" id="sideDealerCloud-WidgetTitle" name="sideDealerCloud-WidgetTitle" value="<?= $title ?>"/>
-        <br/><br/>
-        <label for="sideDealerCloud-VehiclesNumber">
-            <b>Number of vehicles to show:</b>
-        </label>
-        <input type="text" id="sideDealerCloud-VehiclesNumber" name="sideDealerCloud-VehiclesNumber" style="width: 25px; text-align: center;" maxlength="1" value="<?= $number ?>"/><br/>
-        <small>
-            <em>(max 5)</em>
-        </small>
-        <br/><br/>
-        Only show specific make and/or model<br/>
-        <label for="make">
-            <b>Make:</b>
-        </label><br/>
-        <select name="make" id="make" style="width:125px" onChange="getModels();">
-            <option value=""></option>
-            <!--<option value="">-- Any --</option>-->
-            <?php
-            $makes  = $client->GetMakes();
-            foreach ($makes as $m) {
-                $selected = "";
-                if ($make == $m) {
-                    $selected = "selected";
-                }
-                ?>
-                <option
-                    <?= $selected ?> value='<?= $m ?>'><?= $m ?>
-                </option>
-                <?php
-            }
-            ?>
-        </select>
-        <br/><br/>
-        <label for="model">
-            <b>Model:</b>
-        </label><br/>
-        <select name="model" id="model" style="width: 125px;">
-            <option value=""></option>
-            <!--<option value="">-- Any --</option>-->
-            <?php
-            if ($make != "") {
-                $models = $client->GetModels($make);
-                foreach ($models as $m) {
-                    $selected = "";
-                    if ($model == $m) {
-                        $selected = "selected";
-                    }
-                    ?>
-                    <option <?= $selected ?> value='<?= $m ?>'><?= $m ?></option>
-                    <?php
-                }
-            }
-            ?>
-        </select>
-        <br/><br/>
-        <label for="sideDealerCloud-VehiclesIDS">
-            <b>ID's:</b>
-        </label><br/>
-        Only show specific vehicles<br/>
-        <input class="widefat" type="text" id="sideDealerCloud-VehiclesIDS" name="sideDealerCloud-VehiclesIDS" value="<?= $ids ?>"/><br/>
-        <small>
-            <em>(comma separated vehicle id's)</em>
-        </small>
+    <label for="number">
+        <b>Number of vehicles to show:</b>
+    </label>
+    <input type="text" id="number" name="number" style="width: 25px; text-align: center;" maxlength="1" value="<?= $number ?>"/>
+    <small>
+        <em>(max 6)</em>
+    </small>
+    <br/><br/>
 
-        <input type="hidden" id="sideDealerCloud-Submit" name="sideDealerCloud-Submit" value="1"/>
-    </p>
+    <label for="ids">
+        <b>ID's:</b>
+    </label>
+    <br/>Only show specific vehicles<br/>
+    <input class="widefat" type="text" id="ids" name="ids" value="<?= $ids ?>"/><br/>
+    <small>
+        <em>(comma separated vehicle id's)</em>
+    </small>
+    <br/><br/>
+
+    <label for="featured">
+        <b>Featured:</b>
+    </label>
+    <br/>Show featured vehicles first?<br/>
+    <input type="checkbox" id="featured" name="featured" <?= ($featured == '1' ? 'checked' : '') ?>>
+    <br/><br/>
+
+    <label for="sortby">
+        <b>Sort By:</b>
+    </label>
+    <br/>Sort by which vehicle characteristic?<br/>
+    <select name="sortby" id="sortby" style="font-size:16px;width:100%">
+        <option value=""></option>
+        <option <?= ($sortby == 'year' ? 'selected' : '') ?> value='year'>Year</option>
+        <option <?= ($sortby == 'make' ? 'selected' : '') ?> value='make'>Make</option>
+        <option <?= ($sortby == 'model' ? 'selected' : '') ?> value='model'>Model</option>
+        <option <?= ($sortby == 'trim' ? 'selected' : '') ?> value='trim'>Trim</option>
+        <option <?= ($sortby == 'engine' ? 'selected' : '') ?> value='engine'>Engine</option>
+        <option <?= ($sortby == 'mileage' ? 'selected' : '') ?> value='mileage'>Mileage</option>
+        <option <?= ($sortby == 'price' ? 'selected' : '') ?> value='price'>Price</option>
+        <option <?= ($sortby == 'condition' ? 'selected' : '') ?> value='condition'>Condition</option>
+        <option <?= ($sortby == 'typecode' ? 'selected' : '') ?> value='typecode'>TypeCode</option>
+        <option <?= ($sortby == 'cmpg' ? 'selected' : '') ?> value='cmpg'>City MPG</option>
+    </select>
+    <br/><br/>
+
+    <label for="sortdir">
+        <b>Sort Type:</b>
+    </label>
+    <br/>Sort vehicles in which order?<br/>
+    <select name="sortdir" id="sortdir" style="font-size:16px;width:100%">
+        <option value=""></option>
+        <option <?= ($sortdir == 'asc' ? 'selected' : '') ?> value='asc'>Ascending</option>
+        <option <?= ($sortdir == 'desc' ? 'selected' : '') ?> value='desc'>Descending</option>
+    </select>
+
+    <input type="hidden" id="DealerCloud-Submit" name="DealerCloud-Submit" value="1"/>
+</p>

@@ -32,7 +32,7 @@ class DealerCloud_plugin
 
         add_action('admin_menu', array(&$this, 'DealerCloud_Config_Initialize'));
         wp_register_sidebar_widget('DealerCloud_Widget', 'DealerCloud Widget', array(&$this, 'DealerCloud_Widget_Initialize'));
-        wp_register_widget_control('DealerCloud_Widget', 'DealerCloud Widget Configuration', array(&$this, 'DealerCloud_Widget_Config'));
+        wp_register_widget_control('DealerCloud_Widget', 'DealerCloud Widget', array(&$this, 'DealerCloud_Widget_Config'));
     }
 
     /*************************************************************************************************/
@@ -126,10 +126,11 @@ class DealerCloud_plugin
         extract($args);
 
         $options = get_option("DealerCloud_Widget");
+        $title = (isset($options['title']) ? $options['title'] : "New Models !!!");
 
         echo $before_widget;
         echo $before_title;
-        echo (isset($options['title']) ? $options['title'] : '');
+        echo $title;
         echo $after_title;
         $this->DealerCloud_Widget();
         echo $after_widget;

@@ -11,18 +11,21 @@ $baseUrl .= "?";
 
 $permalink_structure = get_option('permalink_structure');
 if ($permalink_structure == '') {
-    $p       = isset($_REQUEST['p']) ? InputHelper::get($_REQUEST,'p') : "";
-    $m       = isset($_REQUEST['m']) ? InputHelper::get($_REQUEST,'m') : "";
-    $page_id = isset($_REQUEST['page_id']) ? InputHelper::get($_REQUEST,'page_id') : "";
-    $cat     = isset($_REQUEST['cat']) ? InputHelper::get($_REQUEST,'cat') : "";
+    $p       = isset($_REQUEST['p']) ? InputHelper::get($_REQUEST, 'p') : "";
+    $m       = isset($_REQUEST['m']) ? InputHelper::get($_REQUEST, 'm') : "";
+    $page_id = isset($_REQUEST['page_id']) ? InputHelper::get($_REQUEST, 'page_id') : "";
+    $cat     = isset($_REQUEST['cat']) ? InputHelper::get($_REQUEST, 'cat') : "";
     $baseUrl .= "page_id=" . $page_id . "&cat=" . $cat . "&p=" . $p . "&m=" . $m . "&";
 }
 
-$options = get_option("DealerCloud_Widget");
-$number  = isset($options['number']) ? $options['number']: 3;
-$ids     = isset($options['ids']) ? $options['ids']: '';
-$make    = isset($options['make']) ? $options['make']: '';
-$model   = isset($options['model']) ? $options['model']: '';
+$options  = get_option("DealerCloud_Widget");
+$number   = isset($options['number']) ? $options['number'] : '3';
+$ids      = isset($options['ids']) ? $options['ids'] : '';
+$featured = isset($options['featured']) ? $options['featured'] : '0';
+$sortby   = isset($options['sortby']) ? $options['sortby'] : 'year';
+$sortdir  = isset($options['sortdir']) ? $options['sortdir'] : 'desc';
+$make     = isset($options['make']) ? $options['make'] : '';
+$model    = isset($options['model']) ? $options['model'] : '';
 
 $folder = WP_PLUGIN_URL . '/DealerCloud';
 $client = new Client();
@@ -45,37 +48,49 @@ if ($ids != '') {
 } else {
     $vehicles = $client->GetVehicles(
         array(
-            "make"       => $make,
-            "model"      => $model,
-            "min_price"  => '',
-            "max_price"  => '',
-            "min_year"   => '',
-            "max_year"   => '',
-            "keyword"    => '',
-            "stock_type" => '',
-            "featured"   => '',
-            "special"    => '',
-            "class_code" => '',
-            "page"       => '1',
-            "page_size"  => (string)$number,
-            "sort_by"    => 'year',
-            "sort_type"  => 'desc'
+            "make"           => $make,
+            "model"          => $model,
+            "min_price"      => '',
+            "max_price"      => '',
+            "min_year"       => '',
+            "max_year"       => '',
+            "keyword"        => '',
+            "featured_first" => $featured,
+            "page"           => '1',
+            "page_size"      => '10',
+            "sort_by"        => $sortby,
+            "sort_type"      => $sortdir
         ));
 }
 
 if ($vehicles["total_count"] > 0 && array_key_exists("list", $vehicles)) {
-    foreach ($vehicles["list"] as $veh) {
-        if (count($veh["photos"]) > 0) {
-            $firstImage = $veh["photos"][0];
-        } else {
-            $firstImage = $folder . "/res/img/noimage3.gif";
-        }
-        ?>
-        <div class="Wgallery">
-            <a href="<?= $client->GetVehicleUrl($baseUrl, $veh) ?>"><img src="<?= $firstImage ?>" width="125" alt="<?= $veh["year"] . " " . $veh["make"] . " " . $veh["model"] ?>"/></a>
+    $vehCount = 0;
+    ?>
+    <div class="photoDiv">
+        <div class="photoRow">
+            <div class="mainPhoto">
+                <div class="photoThumbs" style="width: 320px;">
+                    <?php
+                    foreach ($vehicles["list"] as $veh) {
+                        $vehCount++;
+                        if (count($veh["photos"]) > 0) {
+                            $firstImage = $veh["photos"][0];
+                        } else {
+                            $firstImage = $folder . "/res/img/noimage3.gif";
+                        }
+                        ?>
+                        <a href="<?= $client->GetVehicleUrl($baseUrl, $veh) ?>"><img src="<?= $firstImage ?>" width="100" alt="<?= $veh["year"] . " " . $veh["make"] . " " . $veh["model"] ?>"/></a>
+                        <?php
+                        if ($vehCount == $number) {
+                            break;
+                        }
+                    }
+                    ?>
+                </div>
+            </div>
         </div>
-        <?php
-    }
+    </div>
+    <?php
 } else {
     ?>
     <div class="nocarsinfomessage">

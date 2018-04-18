@@ -25,7 +25,6 @@ function loadModels(a_make) {
     request += "<request method=\"vehicle.list_models\">";
     request += "<token>" + awe_options.aweAPIKey + "</token>";
     request += "<make>" + a_make + "</make>";
-    // request += "<dealer_id>" + awe_options.appName + "</dealer_id>";
     request += "</request>";
 
     // create web client

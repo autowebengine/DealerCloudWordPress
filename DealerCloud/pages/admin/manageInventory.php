@@ -124,6 +124,7 @@ $dealers_domain        = get_option('dealers_domain');
                 <thead>
                 <th>
                 <td></td>
+                <td>ID</td>
                 <td>VIN</td>
                 <td>Stock</td>
                 <td>Year</td>
@@ -142,7 +143,7 @@ $dealers_domain        = get_option('dealers_domain');
                     } else {
                         $firstImage = $folder . "/res/img/noimage3.gif";
                     }
-                    $image = '<img src="' . $firstImage . '" width="85" alt="' . $veh["year"] . " " . $veh["make"] . " " . $veh["model"] . '" />';
+                    $image = '<a href="' . $client->GetVehicleUrl($baseUrl, $veh) . '"><img src="' . $firstImage . '" width="100" alt="' . $veh["year"] . " " . $veh["make"] . " " . $veh["model"] . '" />';
                     $year  = $veh["year"];
                     $make  = $veh["make"];
                     $model = $veh["model"];
@@ -153,6 +154,7 @@ $dealers_domain        = get_option('dealers_domain');
                     <tr>
                         <td><input type="checkbox" id="vehicle<?= $i; ?>" name="vehicle<?= $i; ?>" value="<?= $id; ?>"></td>
                         <td><?= $image ?></td>
+                        <td><?= $id ?></td>
                         <td><?= $vin ?></td>
                         <td><?= $stock ?></td>
                         <td><?= $year ?></td>
@@ -165,6 +167,7 @@ $dealers_domain        = get_option('dealers_domain');
                 </tbody>
             </table>
             <input type="hidden" name="vehCount" value="<?= $i; ?>">
+            <br/><br/>
             <input type="submit" value="Delete" name="Delete">
         </form>
     </div>
